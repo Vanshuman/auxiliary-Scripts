@@ -35,8 +35,7 @@ func FilterFiles() []string {
 		if err := json.Unmarshal(content, &attributes); err != nil {
 			fmt.Println("Error in Parsing the files", err.Error())
 		}
-		byte, _ := json.Marshal(attributes.Documents["ADDRESS"])
-		if strings.Contains(string(byte), "VOTERID") {
+		if _, ok := attributes.Documents["VOTERID"]; ok {
 			orderIds = append(orderIds, strings.TrimRight(file.Name(), ".json"))
 		}
 	}

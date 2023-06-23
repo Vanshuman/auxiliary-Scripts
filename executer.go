@@ -16,8 +16,8 @@ var (
 var sess *session.Session
 
 func main() {
-	objs := awsS3session.FilterFiles()
-	awsS3session.WriteToTxtFile(objs)
+
+	awsS3session.WriteToTxtFile(awsS3session.FilterFiles())
 }
 func manageAws() error {
 	//repute-junk/helloworld/'HW Onroll Employee KYC Form'/

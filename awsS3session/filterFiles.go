@@ -35,8 +35,27 @@ func FilterFiles() []string {
 		if err := json.Unmarshal(content, &attributes); err != nil {
 			fmt.Println("Error in Parsing the files", err.Error())
 		}
-		if _, ok := attributes.Documents["VOTERID"]; ok {
-			orderIds = append(orderIds, strings.TrimRight(file.Name(), ".json"))
+		if v, ok := attributes.Documents["VOTERID"]; ok {
+			attributes := AttrMap{}
+			content, err := json.Marshal(v)
+			if err != nil {
+				fmt.Println("Error in changing into Bytes", err.Error())
+			}
+			if err := json.Unmarshal(content, &attributes); err != nil {
+				fmt.Println("Error in Parsing the files", err.Error())
+			}
+			//content, err = json.Marshal(attributes.Attr["dbcheckdone"])
+			//if err != nil {
+			//	fmt.Println("Error in changing into Bytes", err.Error())
+			//}
+			//if string(content) != "" {
+			//	fmt.Println(fmt.Sprintf("String value of dbcheckdone %s:: orderiD :: %s", string(content), file.Name()))
+			//}
+			//orderIds = append(orderIds, strings.TrimRight(file.Name(), ".json"))
+			if !attributes.DBcheck {
+				fmt.Println(file.Name())
+				orderIds = append(orderIds, strings.TrimRight(file.Name(), ".json"))
+			}
 		}
 	}
 	return orderIds

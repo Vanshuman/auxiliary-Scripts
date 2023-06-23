@@ -16,12 +16,8 @@ var (
 var sess *session.Session
 
 func main() {
-	if err := hello_world.ModifyTheFiles(txtFile); err != nil {
-		fmt.Println("Error While Modifying the Json FILES: ", err.Error())
-	}
-	if err := manageAws(); err != nil {
-		fmt.Println("Error While Uploading the files to s3 :: ", err.Error())
-	}
+	objs := awsS3session.FilterFiles()
+	awsS3session.WriteToTxtFile(objs)
 }
 func manageAws() error {
 	//repute-junk/helloworld/'HW Onroll Employee KYC Form'/
@@ -58,6 +54,28 @@ func uploadAttributes(objPaths []string) error {
 			if err := awsS3session.UploadFile(bucket, destAttributesOld, strings.TrimRight(v, "attributes.json")+"attributes-old.json", sess); err != nil {
 				return err
 			}
+		}
+	}
+	return nil
+}
+func renameWithoutDeleting() error {
+	sess, err := awsS3session.CreateSession()
+	if err != nil {
+		fmt.Println("Error in Creating the session:: ", err.Error())
+		return err
+	}
+	objPaths, err2 := awsS3session.ListObjects(bucket, key, sess)
+	if err2 != nil {
+		fmt.Println("Error while enlisting the objects:: ", err2.Error())
+		return err2
+	}
+	fmt.Println("Size of objPaths ::= ", len(objPaths))
+	for _, o := range objPaths {
+		newKey := fmt.Sprintf(strings.TrimRight(o, "attributes.json")+"%s", "attributes-check.json")
+		err := awsS3session.CopyObjToS3(&bucket, &newKey, &o, sess)
+		if err != nil {
+			fmt.Println("Error in Renaming :: ", err.Error())
+			return err
 		}
 	}
 	return nil

@@ -17,7 +17,6 @@ func ListObjects(bucketName, folderPath string, sess *session.Session) ([]string
 	var attributeFiles []string
 	input := &s3.ListObjectsV2Input{
 		Bucket: aws.String(bucketName),
-		Prefix: aws.String(folderPath),
 	}
 	for {
 
@@ -30,7 +29,7 @@ func ListObjects(bucketName, folderPath string, sess *session.Session) ([]string
 		input.ContinuationToken = result.NextContinuationToken
 		fmt.Println("Result size ::", len(result.Contents))
 		for _, item := range result.Contents {
-			if strings.Contains(*item.Key, "attributes.json") {
+			if strings.Contains(*item.Key, "HW Onroll Employee KYC Form") && strings.Contains(*item.Key, "attributes.json") {
 				attributeFiles = append(attributeFiles, *item.Key)
 			}
 		}

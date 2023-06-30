@@ -11,6 +11,11 @@ type Attributes struct {
 	MetaData          *interface{}           `json:"meta_data"`
 	Version           *interface{}           `json:"version"`
 }
+type AttrMap struct {
+	Attr    map[string]interface{} `json:"attributes"`
+	DBcheck bool                   `json:"dbcheckdone"`
+	source  string                 `json:"source"`
+}
 
 func InitAttributes(file string) (*Attributes, error) {
 	file1, _ := os.Open(file)
